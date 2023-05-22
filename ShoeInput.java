@@ -12,21 +12,23 @@ public class ShoeInput implements ActionListener{
     JButton newShoe = new JButton("Input new shoe");
     //Window two a
     JFrame windowTwo = new JFrame();
-    Label laces = new Label("Laces: ");
-    JLabel label = new JLabel("Choose Option");
+    JLabel lacesLabel = new JLabel("Choose Option");
         // Window two b
     JFrame laceOp = new JFrame();
     ArrayList<JButton> options = new ArrayList<>();
     JButton opOne = new JButton("op one");
     JButton opTwo = new JButton("op two");
-    JButton opThree = new JButton("op three");
+    JButton opThree = new JButton("enter option");
+
+    JFrame inputWindowLaces = new JFrame();
+    JTextField inputOpThree = new JTextField("enter option");
 
     public static void main(String[] args){
         new ShoeInput();
     }
     public ShoeInput(){
+        // New shoe window
         window.setLayout(new BorderLayout());
-        window.setSize(750,1000);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container cNS = new Container();
         cNS.setLayout(new GridLayout(1, 1));
@@ -36,27 +38,45 @@ public class ShoeInput implements ActionListener{
         window.setVisible(true);
         window.pack();
 
+        inputWindow();
+    }
+    public void inputWindow(){
         windowTwo.setLayout(new BorderLayout());
-        JPanel panel = new JPanel();
-        panel.setLayout(new SpringLayout());
-        panel.add(laces);
+
+        //Information container
+        JLabel brand = new JLabel("Brand : Lululemon");
+        JLabel loco = new JLabel("Brand's HQ Location : PDX");
+        JPanel shoeName = new JPanel();
+        shoeName.setLayout(new GridLayout(1,2));
+        JLabel title = new JLabel("Shoe Name: ");
+        JTextField inputTitle = new JTextField("enter name");
+        inputTitle.addActionListener(this);
+        shoeName.add(title);
+        shoeName.add(inputTitle, BorderLayout.EAST);
+        Container infoContainer = new Container();
+        infoContainer.setLayout(new GridLayout(3, 1));
+        infoContainer.add(brand);
+        infoContainer.add(loco);
+        infoContainer.add(shoeName);
+        windowTwo.add(infoContainer);
+        windowTwo.pack();
+
+        //  Laces container
+        JLabel laces = new JLabel("Laces: ");
         Container cCB = new Container();
         cCB.setLayout(new GridLayout(1, 3));
-        cCB.add(panel, BorderLayout.NORTH);
-
+        cCB.add(laces);
         JCheckBox y = new JCheckBox("Yes");
         y.addActionListener(this);
-        windowTwo.add(y);
         JCheckBox n = new JCheckBox("No");
         n.addActionListener(this);
-        windowTwo.add(n);
-
 
         cCB.add(y);
         cCB.add(n);
-        cCB.add(label);
+        cCB.add(lacesLabel);
         windowTwo.add(cCB);
         windowTwo.pack();
+
         ActionListener clickButton = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,17 +86,19 @@ public class ShoeInput implements ActionListener{
                 if (e.getSource().equals(y) && click == true){
                     System.out.println("clicked");
                     laceOp.setVisible(true);
-                    chooseLaces();
+                    chooseLaces(); //calls laces method
                 }
             }
         };
         y.addActionListener(clickButton);
 
+
     }
     public void chooseLaces(){
+        inputOpThree.addActionListener(this);
+        inputWindowLaces.add(inputOpThree);
         options.add(opOne);
         options.add(opTwo);
-        options.add(opThree);
         laceOp.setLayout(new BorderLayout());
         opOne.addActionListener(this);
         opTwo.addActionListener(this);
@@ -86,6 +108,7 @@ public class ShoeInput implements ActionListener{
         for (JButton laces: options){
             cLO.add(laces);
         }
+        cLO.add(opThree);
         laceOp.add(cLO);
         laceOp.pack();
     }
@@ -98,8 +121,11 @@ public class ShoeInput implements ActionListener{
         for (JButton laces: options){
             if (e.getSource().equals(laces)){
                 laceOp.setVisible(false);
-                label.setText(laces.getText());
+                lacesLabel.setText(laces.getText());
             }
+        }
+        if (e.getSource().equals(opThree)){
+            inputWindowLaces.setVisible(true);
         }
     }
 }
