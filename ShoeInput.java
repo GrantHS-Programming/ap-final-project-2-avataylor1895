@@ -12,16 +12,26 @@ public class ShoeInput implements ActionListener{
     JButton newShoe = new JButton("Input new shoe");
     //Window two a
     JFrame windowTwo = new JFrame();
+    JTextField inputTitle = new JTextField("enter name");
     JLabel lacesLabel = new JLabel("Choose Option");
-        // Window two b
+    JButton a = new JButton("A: Upper Material");
+    JButton b = new JButton("B: Lining / Reinforcement");
+    JButton c = new JButton("C: Components and Sockliner");
+    JButton d = new JButton("D: Process");
+    JButton e = new JButton("E: Bottom Unit");
+
+    //window three
+    JFrame sectionA = new JFrame();
     JFrame laceOp = new JFrame();
     ArrayList<JButton> options = new ArrayList<>();
     JButton opOne = new JButton("op one");
     JButton opTwo = new JButton("op two");
     JButton opThree = new JButton("enter option");
+    JButton doneButton = new JButton("Done");
 
     JFrame inputWindowLaces = new JFrame();
     JTextField inputOpThree = new JTextField("enter option");
+
 
     public static void main(String[] args){
         new ShoeInput();
@@ -38,9 +48,11 @@ public class ShoeInput implements ActionListener{
         window.setVisible(true);
         window.pack();
 
-        inputWindow();
+        windowTwo();
+        windowA();
+
     }
-    public void inputWindow(){
+    public void windowTwo(){
         windowTwo.setLayout(new BorderLayout());
 
         //Information container
@@ -49,7 +61,6 @@ public class ShoeInput implements ActionListener{
         JPanel shoeName = new JPanel();
         shoeName.setLayout(new GridLayout(1,2));
         JLabel title = new JLabel("Shoe Name: ");
-        JTextField inputTitle = new JTextField("enter name");
         inputTitle.addActionListener(this);
         shoeName.add(title);
         shoeName.add(inputTitle, BorderLayout.EAST);
@@ -60,6 +71,29 @@ public class ShoeInput implements ActionListener{
         infoContainer.add(shoeName);
         windowTwo.add(infoContainer);
         windowTwo.pack();
+
+        // Shoe part option
+        Container sections = new Container();
+        sections.setLayout(new GridLayout(6,1));
+        JLabel section = new JLabel("Section: ");
+        a.addActionListener(this);
+        b.addActionListener(this);
+        c.addActionListener(this);
+        d.addActionListener(this);
+        e.addActionListener(this);
+        sections.add(a);
+        sections.add(b);
+        sections.add(c);
+        sections.add(d);
+        sections.add(e);
+        windowTwo.add(sections, BorderLayout.AFTER_LAST_LINE);
+        windowTwo.pack();
+
+    }
+    public void windowA(){
+        sectionA.setLayout(new BorderLayout());
+        JLabel titleA = new JLabel("Upper Material");
+        sectionA.add(titleA);
 
         //  Laces container
         JLabel laces = new JLabel("Laces: ");
@@ -74,8 +108,8 @@ public class ShoeInput implements ActionListener{
         cCB.add(y);
         cCB.add(n);
         cCB.add(lacesLabel);
-        windowTwo.add(cCB);
-        windowTwo.pack();
+        sectionA.add(cCB);
+        sectionA.pack();
 
         ActionListener clickButton = new ActionListener() {
             @Override
@@ -91,12 +125,12 @@ public class ShoeInput implements ActionListener{
             }
         };
         y.addActionListener(clickButton);
-
+        doneButton.addActionListener(this);
+        sectionA.add(doneButton, BorderLayout.AFTER_LAST_LINE);
+        sectionA.pack();
 
     }
     public void chooseLaces(){
-        inputOpThree.addActionListener(this);
-        inputWindowLaces.add(inputOpThree);
         options.add(opOne);
         options.add(opTwo);
         laceOp.setLayout(new BorderLayout());
@@ -112,11 +146,36 @@ public class ShoeInput implements ActionListener{
         laceOp.add(cLO);
         laceOp.pack();
     }
+    public void inputLaces(){
+        inputWindowLaces.setLayout(new GridLayout(1,1));
+        inputOpThree.addActionListener(this);
+        inputWindowLaces.add(inputOpThree);
+        inputWindowLaces.add(doneButton);
+        ActionListener done = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AbstractButton button = (AbstractButton) e.getSource();
+                boolean click = button.getModel().isSelected();
+                if (e.getSource().equals(doneButton)){
+                    String newOpThree = inputOpThree.getText();
+                    lacesLabel.setText(newOpThree);
+                    inputWindowLaces.setVisible(false);
+                    laceOp.setVisible(false);
+                }
+            }
+        };
+        doneButton.addActionListener(done);
+        inputWindowLaces.pack();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(newShoe)){
             windowTwo.setVisible(true);
+        }
+        if (e.getSource().equals(a)){
+            sectionA.setVisible(true);
+
         }
         for (JButton laces: options){
             if (e.getSource().equals(laces)){
@@ -126,6 +185,7 @@ public class ShoeInput implements ActionListener{
         }
         if (e.getSource().equals(opThree)){
             inputWindowLaces.setVisible(true);
+            inputLaces();
         }
     }
 }
