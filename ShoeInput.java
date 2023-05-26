@@ -1,5 +1,6 @@
 import javafx.scene.chart.Axis;
 
+import javax.management.remote.JMXConnectorFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -22,11 +23,27 @@ public class ShoeInput implements ActionListener{
 
     //window three
     JFrame sectionA = new JFrame();
+    //vamp
+    JButton chooseMaterial = new JButton("Choose Material");
+    JLabel vampLabel = new JLabel("");
+    JFrame materialOp = new JFrame();
+    ArrayList<JButton> materialOptions = new ArrayList<>();
+    JButton texon = new JButton("Texon");
+    JButton sincetech = new JButton("Sincetech");
+    JButton inHouse = new JButton("In - House");
+    JButton sanFang = new JButton("San Fang");
+    JButton materialInputButton = new JButton("Enter Option");
+    JFrame inputWindowMaterial = new JFrame();
+    JTextField inputMaterial = new JTextField("New Material");
+
+
+    //laces
     JFrame laceOp = new JFrame();
-    ArrayList<JButton> options = new ArrayList<>();
+    ArrayList<JButton> lacesOptions = new ArrayList<>();
     JButton opOne = new JButton("op one");
     JButton opTwo = new JButton("op two");
     JButton opThree = new JButton("enter option");
+
     JButton doneButton = new JButton("Done");
 
     JFrame inputWindowLaces = new JFrame();
@@ -95,6 +112,17 @@ public class ShoeInput implements ActionListener{
         JLabel titleA = new JLabel("Upper Material");
         sectionA.add(titleA);
 
+        //Vamp
+        JLabel materials = new JLabel("Materials: ");
+        Container cVamp = new Container();
+        cVamp.setLayout(new GridLayout(1,3));
+        cVamp.add(materials);
+        cVamp.add(chooseMaterial);
+        chooseMaterial.addActionListener(this);
+        cVamp.add(vampLabel);
+        sectionA.add(cVamp);
+        sectionA.pack();
+
         //  Laces container
         JLabel laces = new JLabel("Laces: ");
         Container cCB = new Container();
@@ -117,7 +145,7 @@ public class ShoeInput implements ActionListener{
                 AbstractButton button = (AbstractButton) e.getSource();
                 boolean click = button.getModel().isSelected();
                 System.out.println(click);
-                if (e.getSource().equals(y) && click == true){
+                if (e.getSource().equals(y) && click){
                     System.out.println("clicked");
                     laceOp.setVisible(true);
                     chooseLaces(); //calls laces method
@@ -130,18 +158,53 @@ public class ShoeInput implements ActionListener{
         sectionA.pack();
 
     }
+    public void materialChoice(JLabel label){
+        materialOp.setLayout(new BorderLayout()); // ? make this visib;eeeeeee
+        Container cMO = new Container();
+        cMO.setLayout(new GridLayout(5,1));
+        materialOptions.add(texon);
+        materialOptions.add(sincetech);
+        materialOptions.add(inHouse);
+        materialOptions.add(sanFang);
+        materialOp.setVisible(true);
+        for (JButton material: materialOptions){
+            cMO.add(material);
+            material.addActionListener(this);
+        }
+        cMO.add(materialInputButton);
+        inputWindowMaterial.setLayout(new GridLayout(1,2));
+        inputWindowMaterial.add(inputMaterial);
+        inputWindowMaterial.add(doneButton);
+        inputWindowMaterial.pack();
+        materialOp.add(cMO);
+        materialOp.pack();
+        ActionListener inputAction = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource().equals(materialInputButton)){
+                    inputWindowMaterial.setVisible(true);
+                }
+                if (e.getSource().equals(doneButton)){
+                    String newMaterial = inputMaterial.getText();
+                    label.setText(newMaterial);
+                    inputWindowMaterial.setVisible(false);
+                    materialOp.setVisible(false);
+                }
+            }
+        };
+        materialInputButton.addActionListener(inputAction);
+    }
     public void chooseLaces(){
-        options.add(opOne);
-        options.add(opTwo);
+        lacesOptions.add(opOne);
+        lacesOptions.add(opTwo);
         laceOp.setLayout(new BorderLayout());
-        opOne.addActionListener(this);
-        opTwo.addActionListener(this);
-        opThree.addActionListener(this);
         Container cLO = new Container();
         cLO.setLayout(new GridLayout(3, 1));
-        for (JButton laces: options){
+        for (JButton laces: lacesOptions){
+            laces.addActionListener(this);
             cLO.add(laces);
         }
+        opThree.addActionListener(this);
         cLO.add(opThree);
         laceOp.add(cLO);
         laceOp.pack();
@@ -154,8 +217,6 @@ public class ShoeInput implements ActionListener{
         ActionListener done = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AbstractButton button = (AbstractButton) e.getSource();
-                boolean click = button.getModel().isSelected();
                 if (e.getSource().equals(doneButton)){
                     String newOpThree = inputOpThree.getText();
                     lacesLabel.setText(newOpThree);
@@ -175,9 +236,11 @@ public class ShoeInput implements ActionListener{
         }
         if (e.getSource().equals(a)){
             sectionA.setVisible(true);
-
         }
-        for (JButton laces: options){
+        if (e.getSource().equals(chooseMaterial)){
+            materialChoice(vampLabel);
+        }
+        for (JButton laces: lacesOptions){
             if (e.getSource().equals(laces)){
                 laceOp.setVisible(false);
                 lacesLabel.setText(laces.getText());
@@ -187,5 +250,8 @@ public class ShoeInput implements ActionListener{
             inputWindowLaces.setVisible(true);
             inputLaces();
         }
+        //Done clicked:
+        //get laces text
+
     }
 }
